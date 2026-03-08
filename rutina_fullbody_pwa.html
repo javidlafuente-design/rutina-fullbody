@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Rutina 5D">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="description" content="Rutina Full Body 5 Días con temporizador de descanso">
+<title>Rutina Full Body 5D</title>
+
+<!-- iOS icons inline SVG como data URI -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230a0a0a'/%3E%3Crect width='180' height='180' rx='40' fill='%2322c55e' fill-opacity='.15'/%3E%3Ctext x='90' y='115' font-size='80' text-anchor='middle' fill='%2322c55e'%3E💪%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg:#0a0a0a; --surface:#141414; --surface2:#1e1e1e;
+    --border:#2a2a2a; --border2:#333;
+    --green:#22c55e; --green-dim:#166534; --green-soft:rgba(34,197,94,0.12);
+    --blue:#3b82f6; --blue-soft:rgba(59,130,246,0.12);
+    --orange:#f97316; --orange-soft:rgba(249,115,22,0.12);
+    --purple:#a855f7; --purple-soft:rgba(168,85,247,0.12);
+    --red:#ef4444;
+    --text:#f5f5f5; --muted:#888; --dim:#555;
+    --r:16px; --rs:10px;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bot: env(safe-area-inset-bottom, 0px);
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  html { height: 100%; }
+
+  body {
+    background:var(--bg); color:var(--text);
+    font-family:'DM Sans',sans-serif;
+    min-height:100dvh; overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display:none; flex-direction:column; min-height:100dvh; }
+  .screen.active { display:flex; }
+
+  /* ── INSTALL BANNER ── */
+  #install-banner {
+    display:none;
+    position:fixed; bottom:0; left:0; right:0; z-index:200;
+    background:var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 16px 20px calc(16px + var(--safe-bot));
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  .install-banner-inner {
+    display:flex; align-items:center; gap:14px;
+  }
+
+  .install-icon {
+    width:52px; height:52px; border-radius:14px;
+    background: linear-gradient(135deg, #0d1f0d, #1a3a1a);
+    border: 1px solid var(--green-dim);
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px; flex-shrink:0;
+  }
+
+  .install-text { flex:1; }
+  .install-title { font-weight:600; font-size:14px; margin-bottom:2px; }
+  .install-sub { font-size:12px; color:var(--muted); line-height:1.3; }
+
+  .install-steps {
+    margin-top:14px;
+    background: rgba(34,197,94,0.06);
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius:12px;
+    padding:14px 16px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+
+  .install-step {
+    display:flex; align-items:flex-start; gap:10px;
+    font-size:13px; color:var(--muted); line-height:1.4;
+  }
+
+  .step-num {
+    background:var(--green); color:#000;
+    width:20px; height:20px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; flex-shrink:0;
+    margin-top:1px;
+  }
+
+  .btn-close-banner {
+    position:absolute; top:12px; right:16px;
+    background:none; border:none; color:var(--dim);
+    font-size:20px; cursor:pointer; padding:4px;
+  }
+
+  /* ── HOME ── */
+  #home { background:var(--bg); }
+
+  .home-hero {
+    background: linear-gradient(160deg, #0d1f0d 0%, #0a0a0a 65%);
+    padding: calc(60px + var(--safe-top)) 24px 40px;
+    position:relative; overflow:hidden;
+  }
+
+  .home-hero::before {
+    content:'';
+    position:absolute; top:-60px; right:-60px;
+    width:280px; height:280px;
+    background: radial-gradient(circle, rgba(34,197,94,0.15) 0%, transparent 70%);
+    pointer-events:none;
+  }
+
+  .home-hero::after {
+    content:'';
+    position:absolute; bottom:-20px; left:-40px;
+    width:200px; height:200px;
+    background: radial-gradient(circle, rgba(34,197,94,0.06) 0%, transparent 70%);
+    pointer-events:none;
+  }
+
+  .home-badge {
+    display:inline-flex; align-items:center; gap:6px;
+    background:rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.3);
+    color:var(--green); font-size:11px; font-weight:600;
+    letter-spacing:1.5px; text-transform:uppercase;
+    padding:5px 12px; border-radius:100px; margin-bottom:16px;
+  }
+
+  .home-title {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(48px,14vw,68px);
+    line-height:0.92; letter-spacing:1px;
+    margin-bottom:14px;
+  }
+
+  .home-title span { color:var(--green); }
+
+  .home-sub {
+    color:var(--muted); font-size:13px; font-weight:300;
+    line-height:1.6; margin-bottom:28px;
+  }
+
+  .stats-row {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:8px;
+  }
+
+  .stat-card {
+    background:rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius:var(--rs); padding:14px 10px; text-align:center;
+  }
+
+  .stat-num {
+    font-family:'Bebas Neue',sans-serif; font-size:30px;
+    color:var(--green); display:block; line-height:1;
+  }
+
+  .stat-label {
+    font-size:10px; color:var(--dim);
+    text-transform:uppercase; letter-spacing:1px;
+    margin-top:3px; display:block;
+  }
+
+  .days-list {
+    padding:16px 16px calc(90px + var(--safe-bot));
+    display:flex; flex-direction:column; gap:8px;
+    flex:1;
+  }
+
+  .section-label {
+    font-size:11px; color:var(--dim);
+    text-transform:uppercase; letter-spacing:1.5px;
+    padding:8px 4px 4px; font-weight:600;
+  }
+
+  .day-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--r); padding:16px 18px;
+    display:flex; align-items:center; gap:14px;
+    cursor:pointer; transition:all 0.18s;
+    position:relative; overflow:hidden;
+  }
+
+  .day-card::before {
+    content:''; position:absolute; left:0; top:0; bottom:0;
+    width:3px; border-radius:3px 0 0 3px;
+  }
+
+  .day-card.c-blue::before   { background:var(--blue); }
+  .day-card.c-green::before  { background:var(--green); }
+  .day-card.c-orange::before { background:var(--orange); }
+  .day-card.c-purple::before { background:var(--purple); }
+  .day-card.c-rest::before   { background:var(--dim); }
+
+  .day-card:active { transform:scale(0.975); }
+
+  .day-icon {
+    width:42px; height:42px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px; flex-shrink:0;
+  }
+
+  .day-card.c-blue   .day-icon { background:var(--blue-soft); }
+  .day-card.c-green  .day-icon { background:var(--green-soft); }
+  .day-card.c-orange .day-icon { background:var(--orange-soft); }
+  .day-card.c-purple .day-icon { background:var(--purple-soft); }
+  .day-card.c-rest   .day-icon { background:rgba(255,255,255,0.04); }
+
+  .day-info { flex:1; min-width:0; }
+
+  .day-name {
+    font-family:'Bebas Neue',sans-serif; font-size:19px;
+    letter-spacing:0.3px; line-height:1; margin-bottom:4px;
+  }
+
+  .day-desc { font-size:12px; color:var(--muted); line-height:1.3; }
+
+  .day-meta { text-align:right; flex-shrink:0; }
+  .day-duration { font-family:'Bebas Neue',sans-serif; font-size:17px; color:var(--muted); }
+  .day-excount { font-size:10px; color:var(--dim); display:block; margin-top:2px; }
+
+  .rest-card { opacity:0.45; cursor:default; }
+
+  /* ── SESSION ── */
+  #session { background:var(--bg); }
+
+  .session-header {
+    padding: calc(52px + var(--safe-top)) 16px 12px;
+    display:flex; align-items:center; gap:12px;
+    position:sticky; top:0; background:var(--bg); z-index:10;
+    border-bottom:1px solid var(--border);
+  }
+
+  .btn-back {
+    width:40px; height:40px; border-radius:10px;
+    background:var(--surface); border:1px solid var(--border);
+    color:var(--text); font-size:18px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; flex-shrink:0;
+  }
+
+  .session-title-wrap { flex:1; }
+  .session-day-label { font-size:10px; color:var(--dim); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:2px; }
+  .session-title { font-family:'Bebas Neue',sans-serif; font-size:21px; letter-spacing:0.3px; line-height:1; }
+
+  .progress-wrap {
+    padding:10px 16px;
+    display:flex; align-items:center; gap:10px;
+  }
+
+  .progress-bar {
+    flex:1; height:3px; background:var(--border); border-radius:2px; overflow:hidden;
+  }
+
+  .progress-fill {
+    height:100%; background:var(--green); border-radius:2px;
+    transition:width 0.4s ease;
+  }
+
+  .progress-text { font-size:12px; color:var(--muted); white-space:nowrap; }
+
+  .ex-list {
+    padding:8px 14px calc(100px + var(--safe-bot));
+    display:flex; flex-direction:column; gap:6px;
+  }
+
+  .block-lbl {
+    font-size:10px; color:var(--dim); text-transform:uppercase;
+    letter-spacing:1.5px; padding:14px 4px 4px; font-weight:600;
+  }
+
+  .ex-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--rs); padding:13px 15px;
+    cursor:pointer; transition:all 0.18s; position:relative;
+  }
+
+  .ex-card.is-active {
+    border-color:var(--green); background:rgba(34,197,94,0.06);
+  }
+
+  .ex-card.is-done { opacity:0.45; }
+  .ex-card:active { transform:scale(0.985); }
+
+  .ex-top { display:flex; align-items:flex-start; gap:10px; }
+
+  .ex-check {
+    width:22px; height:22px; border-radius:7px;
+    border:2px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; margin-top:1px; transition:all 0.2s; font-size:11px;
+  }
+
+  .ex-card.is-done .ex-check { background:var(--green); border-color:var(--green); color:#000; }
+  .ex-card.is-active .ex-check { border-color:var(--green); }
+
+  .ex-name { font-size:14px; font-weight:500; line-height:1.3; flex:1; }
+
+  .ex-badges {
+    display:flex; gap:5px; margin-top:9px; padding-left:32px; flex-wrap:wrap;
+  }
+
+  .bdg {
+    font-size:10px; font-weight:600; padding:2px 8px;
+    border-radius:100px; display:flex; align-items:center; gap:3px;
+  }
+
+  .bdg-s { background:var(--blue-soft); color:var(--blue); }
+  .bdg-r { background:var(--orange-soft); color:var(--orange); }
+  .bdg-n { background:rgba(255,255,255,0.06); color:var(--muted); font-weight:400; }
+
+  /* ── SETS OVERLAY ── */
+  .overlay {
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.88); backdrop-filter:blur(16px);
+    z-index:90; flex-direction:column; align-items:center; justify-content:center;
+    padding:32px 24px;
+  }
+
+  .overlay.active { display:flex; }
+
+  /* Sets */
+  .sets-name {
+    font-family:'Bebas Neue',sans-serif; font-size:28px;
+    text-align:center; margin-bottom:6px; line-height:1.1;
+    max-width:320px;
+  }
+
+  .sets-detail { font-size:13px; color:var(--muted); margin-bottom:36px; text-align:center; }
+
+  .sets-ctr { display:flex; align-items:center; gap:28px; margin-bottom:8px; }
+
+  .sets-btn {
+    width:60px; height:60px; border-radius:18px;
+    background:var(--surface2); border:1px solid var(--border);
+    color:var(--text); font-size:26px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:all 0.15s;
+  }
+
+  .sets-btn:active { transform:scale(0.9); background:var(--border); }
+
+  .sets-num {
+    font-family:'Bebas Neue',sans-serif; font-size:80px; color:var(--green);
+    line-height:1; min-width:76px; text-align:center;
+  }
+
+  .sets-of { font-size:13px; color:var(--dim); text-align:center; margin-bottom:32px; }
+
+  .btn-primary {
+    width:100%; max-width:300px; height:54px; border-radius:15px;
+    background:var(--green); border:none; color:#000;
+    font-family:'DM Sans',sans-serif; font-size:15px; font-weight:700;
+    cursor:pointer; transition:all 0.15s;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    margin-bottom:10px;
+  }
+
+  .btn-primary:active { transform:scale(0.97); }
+
+  .btn-ghost {
+    background:none; border:none; color:var(--muted);
+    font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; padding:8px;
+  }
+
+  /* ── TIMER OVERLAY ── */
+  #timer-overlay { z-index:100; }
+
+  .timer-lbl {
+    font-size:11px; color:var(--muted); text-transform:uppercase;
+    letter-spacing:2px; margin-bottom:6px;
+  }
+
+  .timer-ex {
+    font-family:'Bebas Neue',sans-serif; font-size:26px;
+    text-align:center; margin-bottom:44px; line-height:1.1;
+    max-width:290px; color:var(--text);
+  }
+
+  .ring-wrap {
+    position:relative; width:210px; height:210px; margin-bottom:40px;
+  }
+
+  .ring-svg { width:210px; height:210px; transform:rotate(-90deg); }
+  .ring-track { fill:none; stroke:var(--surface2); stroke-width:10; }
+
+  .ring-prog {
+    fill:none; stroke:var(--green); stroke-width:10; stroke-linecap:round;
+    transition:stroke-dashoffset 1s linear, stroke 0.3s;
+  }
+
+  .ring-prog.warn  { stroke:var(--orange); }
+  .ring-prog.urg   { stroke:var(--red); }
+
+  .ring-inner {
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+
+  .ring-secs {
+    font-family:'Bebas Neue',sans-serif; font-size:78px;
+    line-height:1; letter-spacing:-2px; transition:color 0.3s;
+  }
+
+  .ring-secs.warn { color:var(--orange); }
+  .ring-secs.urg  { color:var(--red); }
+
+  .ring-sub { font-size:10px; color:var(--dim); text-transform:uppercase; letter-spacing:1.5px; margin-top:2px; }
+
+  .timer-btns {
+    display:flex; gap:10px; width:100%; max-width:300px;
+  }
+
+  .btn-skip {
+    flex:1; height:50px; border-radius:13px;
+    background:var(--surface2); border:1px solid var(--border);
+    color:var(--muted); font-family:'DM Sans',sans-serif; font-size:14px;
+    font-weight:600; cursor:pointer; transition:all 0.15s;
+  }
+
+  .btn-skip:active { transform:scale(0.97); }
+
+  .btn-done-t {
+    flex:1.5; height:50px; border-radius:13px;
+    background:var(--green); border:none; color:#000;
+    font-family:'DM Sans',sans-serif; font-size:14px;
+    font-weight:700; cursor:pointer; transition:all 0.15s;
+  }
+
+  .btn-done-t:active { transform:scale(0.97); }
+
+  /* ── COMPLETE ── */
+  #complete {
+    align-items:center; justify-content:center; text-align:center;
+    padding:40px 24px;
+  }
+
+  .complete-emoji { font-size:72px; margin-bottom:20px; display:block; }
+
+  .complete-title {
+    font-family:'Bebas Neue',sans-serif; font-size:52px; color:var(--green);
+    margin-bottom:6px; line-height:1;
+  }
+
+  .complete-sub { font-size:15px; color:var(--muted); margin-bottom:44px; line-height:1.5; }
+
+  .complete-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:10px;
+    width:100%; max-width:300px; margin-bottom:40px;
+  }
+
+  .c-stat {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--rs); padding:20px 14px;
+  }
+
+  .c-stat-n {
+    font-family:'Bebas Neue',sans-serif; font-size:38px; color:var(--green);
+    display:block; line-height:1;
+  }
+
+  .c-stat-l {
+    font-size:10px; color:var(--dim); text-transform:uppercase;
+    letter-spacing:1px; margin-top:4px; display:block;
+  }
+
+  /* Animations */
+  @keyframes pop { 0%{transform:scale(0.9);opacity:0} 100%{transform:scale(1);opacity:1} }
+  .overlay.active { animation:pop 0.2s ease; }
+
+  @keyframes tick-pulse {
+    0%,100%{transform:scale(1)} 50%{transform:scale(1.03)}
+  }
+
+  .ring-secs.ticking { animation: tick-pulse 1s ease; }
+
+  /* Active pulse */
+  @keyframes active-glow {
+    0%,100%{ box-shadow:0 0 0 0 rgba(34,197,94,0); }
+    50%{ box-shadow:0 0 0 5px rgba(34,197,94,0.1); }
+  }
+
+  .ex-card.is-active { animation: active-glow 2.5s infinite; }
+</style>
+</head>
+<body>
+
+<!-- ── HOME ── -->
+<div id="home" class="screen active">
+  <div class="home-hero">
+    <div class="home-badge">⚡ Full Body · 5 Días</div>
+    <div class="home-title">RUTINA<br><span>FULL BODY</span></div>
+    <div class="home-sub">46 años · 1 hora · Definición · Brazos · Core fuerte<br>Mancuernas · Banco · Barra · Kettlebell</div>
+    <div class="stats-row">
+      <div class="stat-card"><span class="stat-num">5</span><span class="stat-label">Días</span></div>
+      <div class="stat-card"><span class="stat-num">60'</span><span class="stat-label">Sesión</span></div>
+      <div class="stat-card"><span class="stat-num">18</span><span class="stat-label">Series bíceps</span></div>
+    </div>
+  </div>
+
+  <div class="days-list">
+    <div class="section-label">Esta semana</div>
+
+    <div class="day-card c-blue" onclick="startSession(0)">
+      <div class="day-icon">💪</div>
+      <div class="day-info"><div class="day-name">LUNES — Full Body A</div><div class="day-desc">Fuerza base · Pecho y espalda</div></div>
+      <div class="day-meta"><div class="day-duration">55'</div><span class="day-excount">9 ejerc.</span></div>
+    </div>
+
+    <div class="day-card c-green" onclick="startSession(1)">
+      <div class="day-icon">🔝</div>
+      <div class="day-info"><div class="day-name">MARTES — Full Body B</div><div class="day-desc">Bíceps · Tríceps · Hipertrofia</div></div>
+      <div class="day-meta"><div class="day-duration">60'</div><span class="day-excount">11 ejerc.</span></div>
+    </div>
+
+    <div class="day-card c-rest rest-card">
+      <div class="day-icon">💤</div>
+      <div class="day-info"><div class="day-name">MIÉRCOLES</div><div class="day-desc">Descanso activo · Caminar · Movilidad</div></div>
+      <div class="day-meta"><div class="day-duration">—</div></div>
+    </div>
+
+    <div class="day-card c-orange" onclick="startSession(2)">
+      <div class="day-icon">⚡</div>
+      <div class="day-info"><div class="day-name">JUEVES — Full Body C</div><div class="day-desc">Potencia · Hombros · Core</div></div>
+      <div class="day-meta"><div class="day-duration">60'</div><span class="day-excount">10 ejerc.</span></div>
+    </div>
+
+    <div class="day-card c-purple" onclick="startSession(3)">
+      <div class="day-icon">🦵</div>
+      <div class="day-info"><div class="day-name">VIERNES — Full Body D</div><div class="day-desc">Piernas · Tríceps · Volumen</div></div>
+      <div class="day-meta"><div class="day-duration">60'</div><span class="day-excount">10 ejerc.</span></div>
+    </div>
+
+    <div class="day-card c-green" onclick="startSession(4)">
+      <div class="day-icon">💥</div>
+      <div class="day-info"><div class="day-name">SÁBADO — Full Body E</div><div class="day-desc">Espalda · Bíceps variantes · Cardio</div></div>
+      <div class="day-meta"><div class="day-duration">60'</div><span class="day-excount">10 ejerc.</span></div>
+    </div>
+
+    <div class="day-card c-rest rest-card">
+      <div class="day-icon">🌿</div>
+      <div class="day-info"><div class="day-name">DOMINGO</div><div class="day-desc">Descanso total</div></div>
+      <div class="day-meta"><div class="day-duration">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SESSION ── -->
+<div id="session" class="screen">
+  <div class="session-header">
+    <button class="btn-back" onclick="goHome()">←</button>
+    <div class="session-title-wrap">
+      <div class="session-day-label" id="sess-day"></div>
+      <div class="session-title" id="sess-title"></div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="progress-text" id="prog-text">0 / 0</div>
+  </div>
+  <div class="ex-list" id="ex-list"></div>
+</div>
+
+<!-- ── COMPLETE ── -->
+<div id="complete" class="screen">
+  <span class="complete-emoji">🏆</span>
+  <div class="complete-title">¡SESIÓN<br>LISTA!</div>
+  <div class="complete-sub" id="c-sub">Has terminado todos los ejercicios.</div>
+  <div class="complete-grid">
+    <div class="c-stat"><span class="c-stat-n" id="c-ex">0</span><span class="c-stat-l">Ejercicios</span></div>
+    <div class="c-stat"><span class="c-stat-n" id="c-sets">0</span><span class="c-stat-l">Series</span></div>
+  </div>
+  <button class="btn-primary" onclick="goHome()" style="max-width:300px;">Volver al inicio</button>
+</div>
+
+<!-- ── SETS OVERLAY ── -->
+<div id="sets-overlay" class="overlay">
+  <div class="sets-name" id="sets-name"></div>
+  <div class="sets-detail" id="sets-detail"></div>
+  <div class="sets-ctr">
+    <button class="sets-btn" onclick="chSet(-1)">−</button>
+    <div class="sets-num" id="sets-cur">1</div>
+    <button class="sets-btn" onclick="chSet(1)">+</button>
+  </div>
+  <div class="sets-of" id="sets-of">Serie 1 de 4</div>
+  <button class="btn-primary" id="btn-rest" onclick="doRest()">⏱ Iniciar descanso</button>
+  <button class="btn-ghost" onclick="closeOverlays()">Continuar sin descanso</button>
+</div>
+
+<!-- ── TIMER OVERLAY ── -->
+<div id="timer-overlay" class="overlay">
+  <div class="timer-lbl">DESCANSANDO</div>
+  <div class="timer-ex" id="timer-ex"></div>
+  <div class="ring-wrap">
+    <svg class="ring-svg" viewBox="0 0 210 210">
+      <circle class="ring-track" cx="105" cy="105" r="90"/>
+      <circle class="ring-prog" id="ring-prog" cx="105" cy="105" r="90"/>
+    </svg>
+    <div class="ring-inner">
+      <div class="ring-secs" id="ring-secs">90</div>
+      <div class="ring-sub">segundos</div>
+    </div>
+  </div>
+  <div class="timer-btns">
+    <button class="btn-skip" onclick="skipTimer()">Saltar</button>
+    <button class="btn-done-t" onclick="doneTimer()">Listo ✓</button>
+  </div>
+</div>
+
+<!-- ── INSTALL BANNER (iOS) ── -->
+<div id="install-banner">
+  <button class="btn-close-banner" onclick="closeBanner()">✕</button>
+  <div class="install-banner-inner">
+    <div class="install-icon">💪</div>
+    <div class="install-text">
+      <div class="install-title">Instalar como app</div>
+      <div class="install-sub">Añade esta app a tu pantalla de inicio para acceder sin abrir el navegador</div>
+    </div>
+  </div>
+  <div class="install-steps">
+    <div class="install-step"><div class="step-num">1</div><span>Pulsa el botón <strong>Compartir</strong> ↑ en la barra de Safari</span></div>
+    <div class="install-step"><div class="step-num">2</div><span>Elige <strong>"Añadir a pantalla de inicio"</strong></span></div>
+    <div class="install-step"><div class="step-num">3</div><span>Pulsa <strong>"Añadir"</strong> — ¡listo!</span></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────────────
+const SESSIONS = [
+  { day:"LUNES", title:"Full Body A — Fuerza base", blocks:[
+    { lbl:"🏋️ BLOQUE PRINCIPAL (40 min)", exs:[
+      {n:"Press banca plano con mancuernas", s:"4 × 6-8", r:90, note:"Bajar 3 seg · sube explosivo"},
+      {n:"Dominadas agarre prono",           s:"4 × máx", r:90, note:"Mochila con peso si superas 10"},
+      {n:"Press de hombros sentado",         s:"3 × 8-10",r:75, note:"Columna neutra, sin arquear"},
+      {n:"Remo mancuerna a una mano",        s:"3 × 10",  r:75, note:"Codo pegado al cuerpo"},
+      {n:"Sentadilla goblet con mancuerna",  s:"3 × 12",  r:75, note:"Talones en suelo, pecho arriba"},
+      {n:"Peso muerto rumano",               s:"3 × 10",  r:75, note:"Cadera atrás, espalda plana"},
+    ]},
+    { lbl:"🔥 CORE FINISHER (10 min)", exs:[
+      {n:"Plancha frontal",                  s:"3 × 45 seg",r:30,note:"Glúteos y abdomen apretados"},
+      {n:"Colgado levantando rodillas",      s:"3 × 12",    r:45,note:"Subida controlada, sin balanceo"},
+      {n:"Dead bug",                         s:"3 × 10",    r:45,note:"Lumbar pegada al suelo"},
+    ]}
+  ]},
+  { day:"MARTES", title:"Full Body B — Bíceps & Tríceps", blocks:[
+    { lbl:"🏋️ BLOQUE COMPUESTO (15 min)", exs:[
+      {n:"Dominadas agarre supino",          s:"4 × máx", r:90, note:"Compuesto bíceps — base del día"},
+      {n:"Press banca inclinado",            s:"4 × 10",  r:75, note:"30° de inclinación"},
+    ]},
+    { lbl:"💪 BÍCEPS — 3 ejercicios ★", exs:[
+      {n:"Curl inclinado 45° ★",             s:"4 × 10",        r:75, note:"Máximo estiramiento cabeza larga"},
+      {n:"Curl martillo alternado",          s:"3 × 12",        r:60, note:"Sin balanceo de espalda"},
+      {n:"Curl concentrado",                 s:"2 × 12 / brazo",r:60, note:"Máxima contracción al final"},
+    ]},
+    { lbl:"💪 TRÍCEPS + CORE (15 min)", exs:[
+      {n:"Fondos en banco lastrados",        s:"3 × 12",        r:60, note:"Torso vertical para tríceps"},
+      {n:"Press francés con mancuernas",     s:"3 × 12",        r:60, note:"Codos fijos, no abrir"},
+      {n:"Plancha lateral",                  s:"3 × 40 seg / lado",r:30,note:"Cadera arriba sin hundirla"},
+      {n:"Plancha con toque de hombros",     s:"3 × 12",        r:45, note:"Sin rotar la cadera"},
+    ]}
+  ]},
+  { day:"JUEVES", title:"Full Body C — Potencia & Hombros", blocks:[
+    { lbl:"⚡ BLOQUE POTENCIA (40 min)", exs:[
+      {n:"Clean and press con mancuerna",    s:"4 × 6 / lado",  r:90, note:"Movimiento de potencia completo"},
+      {n:"Dominadas agarre neutro",          s:"3 × máx",       r:90, note:"Agarre paralelo si es posible"},
+      {n:"Press Arnold",                     s:"4 × 10",        r:75, note:"Rotación completa del hombro"},
+      {n:"Swing con kettlebell",             s:"4 × 15",        r:60, note:"Cadera, no brazos — explosivo"},
+      {n:"Elevaciones laterales",            s:"3 × 15",        r:60, note:"Codos ligeramente flexos"},
+      {n:"Bent over lateral raise",          s:"3 × 15",        r:60, note:"Deltoides posterior — torso paralelo"},
+      {n:"Zancada reversa con mancuernas",   s:"3 × 10 / pierna",r:60,note:"Control total de la rodilla"},
+    ]},
+    { lbl:"🔥 CORE FINISHER (10 min)", exs:[
+      {n:"Turkish get-up con kettlebell",    s:"3 × 4 / lado",  r:60, note:"Lento y controlado siempre"},
+      {n:"Plancha frontal",                  s:"3 × 45 seg",    r:30, note:"Máxima tensión abdominal"},
+      {n:"Rollout con mancuerna",            s:"3 × 8",         r:45, note:"Core activo en todo el rango"},
+    ]}
+  ]},
+  { day:"VIERNES", title:"Full Body D — Piernas & Tríceps", blocks:[
+    { lbl:"🦵 BLOQUE PIERNAS + COMPUESTOS (40 min)", exs:[
+      {n:"Sentadilla búlgara con mancuernas",s:"4 × 10 / pierna",r:90,note:"El más duro — hazlo primero"},
+      {n:"Remo bilateral en bisagra",        s:"4 × 10",         r:75,note:"Espalda plana, codos atrás"},
+      {n:"Aperturas en banco plano",         s:"3 × 12",         r:60,note:"Estiramiento lento en bajada"},
+      {n:"Peso muerto con mancuernas",       s:"3 × 10",         r:75,note:"Caderas atrás, cabeza neutral"},
+      {n:"Press tríceps sobre la cabeza",    s:"3 × 12",         r:60,note:"Mancuerna con ambas manos"},
+      {n:"Patada de tríceps",                s:"3 × 15",         r:45,note:"Extensión completa, codo fijo"},
+      {n:"Elevaciones de talones",           s:"4 × 20",         r:45,note:"Rango completo — pausa arriba"},
+    ]},
+    { lbl:"🔥 CORE FINISHER (10 min)", exs:[
+      {n:"Plancha lateral con rotación",     s:"3 × 10 / lado",  r:45,note:"Rotación completa del brazo"},
+      {n:"Dead bug con mancuerna",           s:"3 × 10",         r:45,note:"Peso sobre pecho, piernas alternas"},
+      {n:"Plancha frontal",                  s:"2 × 60 seg",     r:30,note:"Cierre de sesión"},
+    ]}
+  ]},
+  { day:"SÁBADO", title:"Full Body E — Bíceps & Cardio", blocks:[
+    { lbl:"🏋️ ESPALDA (15 min)", exs:[
+      {n:"Dominadas supinas (agarre bíceps)", s:"4 × máx",       r:90,note:"Compuesto que activa bíceps"},
+      {n:"Remo con mancuerna a una mano",     s:"3 × 10 / lado", r:75,note:"Codo bien atrás — espalda ancha"},
+    ]},
+    { lbl:"💪 BÍCEPS VARIANTES ★ (12 min)", exs:[
+      {n:"Curl bilateral con mancuernas",     s:"4 × 10",        r:75,note:"Ambos brazos — más carga total"},
+      {n:"Curl Scott casero",                 s:"3 × 10",        r:60,note:"Brazo en banco — pico máximo"},
+      {n:"Curl 21s con mancuerna",            s:"2 series",      r:75,note:"7 bajo + 7 alto + 7 completo"},
+    ]},
+    { lbl:"🔥 CORE + CARDIO (20 min)", exs:[
+      {n:"Colgado elevación piernas rectas",  s:"4 × 10",        r:45,note:"El más duro de core de la semana"},
+      {n:"Plancha frontal",                   s:"3 × 50 seg",    r:30,note:"Más tiempo que el resto de días"},
+      {n:"Circuito HIIT — 10 min",            s:"40s / 20s desc",r:0, note:"Swings · Burpees · Mountain Climbers"},
+    ]}
+  ]}
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let sess = null, done = new Set(), curIdx = 0, curSet = 1, totalSets = 4;
+let timerIv = null, timerTotal = 90, timerLeft = 90;
+const CIRC = 2 * Math.PI * 90;
+
+// ── UTILS ────────────────────────────────────────────────────────────────────
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function getAllEx() {
+  const a = []; sess.blocks.forEach(b => b.exs.forEach(e => a.push(e))); return a;
+}
+
+// ── NAVIGATION ───────────────────────────────────────────────────────────────
+function goHome() {
+  stopTimer(); closeOverlays();
+  sess = null; done = new Set(); show('home');
+}
+
+// ── SESSION ───────────────────────────────────────────────────────────────────
+function startSession(idx) {
+  sess = SESSIONS[idx]; done = new Set(); curIdx = 0;
+  document.getElementById('sess-day').textContent = sess.day;
+  document.getElementById('sess-title').textContent = sess.title;
+  renderEx(); show('session');
+}
+
+function renderEx() {
+  const list = document.getElementById('ex-list');
+  list.innerHTML = '';
+  let gi = 0;
+  sess.blocks.forEach(bl => {
+    const lbl = document.createElement('div');
+    lbl.className = 'block-lbl'; lbl.textContent = bl.lbl;
+    list.appendChild(lbl);
+    bl.exs.forEach(ex => {
+      const i = gi++;
+      const c = document.createElement('div');
+      c.className = 'ex-card' + (i === curIdx ? ' is-active' : '') + (done.has(i) ? ' is-done' : '');
+      c.id = 'ec' + i;
+      c.onclick = () => openSets(i);
+      c.innerHTML = `
+        <div class="ex-top">
+          <div class="ex-check">${done.has(i) ? '✓' : ''}</div>
+          <div class="ex-name">${ex.n}</div>
+        </div>
+        <div class="ex-badges">
+          <span class="bdg bdg-s">📊 ${ex.s}</span>
+          ${ex.r > 0 ? `<span class="bdg bdg-r">⏱ ${ex.r}s</span>` : ''}
+          <span class="bdg bdg-n">${ex.note}</span>
+        </div>`;
+      list.appendChild(c);
+    });
+  });
+  updateProg();
+}
+
+function updateProg() {
+  const total = getAllEx().length, doneN = done.size;
+  document.getElementById('prog-fill').style.width = (total ? doneN/total*100 : 0) + '%';
+  document.getElementById('prog-text').textContent = `${doneN} / ${total}`;
+}
+
+// ── SETS ─────────────────────────────────────────────────────────────────────
+function openSets(idx) {
+  curIdx = idx;
+  const ex = getAllEx()[idx];
+  const m = ex.s.match(/^(\d+)/);
+  totalSets = m ? parseInt(m[1]) : 1;
+  curSet = 1;
+
+  document.getElementById('sets-name').textContent = ex.n;
+  document.getElementById('sets-detail').textContent = ex.s + (ex.r > 0 ? ` · ${ex.r}s descanso` : ' · Sin descanso');
+  document.getElementById('sets-cur').textContent = curSet;
+  document.getElementById('sets-of').textContent = `Serie ${curSet} de ${totalSets}`;
+
+  const br = document.getElementById('btn-rest');
+  br.style.display = ex.r > 0 ? 'flex' : 'none';
+
+  document.getElementById('sets-overlay').classList.add('active');
+}
+
+function chSet(d) {
+  curSet = Math.max(1, Math.min(totalSets, curSet + d));
+  document.getElementById('sets-cur').textContent = curSet;
+  document.getElementById('sets-of').textContent = `Serie ${curSet} de ${totalSets}`;
+}
+
+function closeOverlays() {
+  document.querySelectorAll('.overlay').forEach(o => o.classList.remove('active'));
+}
+
+function doRest() {
+  const ex = getAllEx()[curIdx];
+  if (curSet >= totalSets) done.add(curIdx);
+  closeOverlays();
+  openTimer(ex.r, ex.n, curSet >= totalSets);
+  renderEx();
+}
+
+// ── TIMER ─────────────────────────────────────────────────────────────────────
+function openTimer(secs, name, isLast) {
+  timerTotal = secs; timerLeft = secs;
+  document.getElementById('timer-ex').textContent = isLast ? name + ' — última serie ✓' : name;
+  document.getElementById('timer-overlay').classList.add('active');
+  updateTimerUI(); stopTimer();
+  timerIv = setInterval(() => { timerLeft--; updateTimerUI(); if (timerLeft <= 0) { stopTimer(); onTimerEnd(); }}, 1000);
+}
+
+function updateTimerUI() {
+  const el = document.getElementById('ring-secs');
+  const rp = document.getElementById('ring-prog');
+  const pct = timerLeft / timerTotal;
+  const off = CIRC * (1 - pct);
+  rp.style.strokeDasharray = CIRC;
+  rp.style.strokeDashoffset = off;
+  el.textContent = timerLeft;
+  el.className = 'ring-secs' + (timerLeft <= 5 ? ' urg' : timerLeft <= 15 ? ' warn' : '');
+  rp.className = 'ring-prog' + (timerLeft <= 5 ? ' urg' : timerLeft <= 15 ? ' warn' : '');
+  el.classList.remove('ticking'); void el.offsetWidth; el.classList.add('ticking');
+}
+
+function onTimerEnd() {
+  if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+  closeOverlays(); renderEx(); checkDone();
+}
+
+function skipTimer() { stopTimer(); closeOverlays(); renderEx(); checkDone(); }
+function doneTimer() { stopTimer(); closeOverlays(); renderEx(); checkDone(); }
+function stopTimer()  { if (timerIv) { clearInterval(timerIv); timerIv = null; } }
+
+// ── COMPLETION ────────────────────────────────────────────────────────────────
+function checkDone() {
+  if (done.size >= getAllEx().length) setTimeout(showComplete, 350);
+}
+
+function showComplete() {
+  const all = getAllEx();
+  let ts = 0; all.forEach(e => { const m = e.s.match(/^(\d+)/); ts += m ? parseInt(m[1]) : 1; });
+  document.getElementById('c-ex').textContent = all.length;
+  document.getElementById('c-sets').textContent = ts;
+  document.getElementById('c-sub').textContent = `${sess.day} — ${sess.title}`;
+  show('complete');
+}
+
+// ── INSTALL BANNER (iOS) ──────────────────────────────────────────────────────
+function closeBanner() {
+  document.getElementById('install-banner').style.display = 'none';
+  sessionStorage.setItem('banner-closed', '1');
+}
+
+function maybeShowBanner() {
+  if (sessionStorage.getItem('banner-closed')) return;
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  if (isIOS && !isStandalone) {
+    setTimeout(() => {
+      document.getElementById('install-banner').style.display = 'block';
+    }, 2500);
+  }
+}
+
+maybeShowBanner();
+</script>
+</body>
+</html>
